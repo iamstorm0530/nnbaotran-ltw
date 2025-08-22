@@ -1,8 +1,10 @@
 package murach.email;
 
-import java.io.*;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import murach.business.User;
 import murach.data.UserDB;
@@ -14,42 +16,28 @@ public class EmailListServlet extends HttpServlet {
                           HttpServletResponse response)
             throws ServletException, IOException {
 
-        String url = "/index.html";
-
-        // get current action
+        request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        if (action == null) {
-            action = "join"; // default action
-        }
+        if (action == null) action = "join";
 
-        // perform action and set URL to appropriate page
-        if (action.equals("join")) {
-            url = "/index.html";       // the "join" page
-        } else if (action.equals("add")) {
-            // get parameters from the request
-            String firstName = request.getParameter("firstName");
-            String lastName  = request.getParameter("lastName");
-            String email     = request.getParameter("email");
+        String url = "/index.html";
+        if ("add".equals(action)) {
+            String first = request.getParameter("firstName");
+            String last  = request.getParameter("lastName");
+            String email = request.getParameter("email");
 
-            // store data in User object and save User object in db
-            User user = new User(firstName, lastName, email);
-            UserDB.insert(user);
+            User user = new User(first, last, email);
+            UserDB.insert(user);                 // stub
 
-            // set User object in request and set URL
             request.setAttribute("user", user);
-            url = "/thanks.jsp";       // the "thanks" page
+            url = "/thanks.jsp";
         }
-
-        // forward request and response to specified URL
-        getServletContext()
-            .getRequestDispatcher(url)
-            .forward(request, response);
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        doPost(request, response);
+        doPost(req, resp);
     }
 }
