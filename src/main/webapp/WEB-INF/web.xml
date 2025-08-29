@@ -12,7 +12,7 @@
 
   <servlet-mapping>
     <servlet-name>EmailListServlet</servlet-name>
-    <url-pattern>/emaillist</url-pattern>
+    <url-pattern>/emailList</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
